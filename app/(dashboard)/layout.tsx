@@ -1,5 +1,7 @@
 import { getServerSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -11,5 +13,13 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/sign-in");
 
-  return children;
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main>
+        <SidebarTrigger />
+        {children}
+      </main>
+    </SidebarProvider>
+  );
 }
