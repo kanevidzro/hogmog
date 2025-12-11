@@ -42,6 +42,18 @@ export const auth = betterAuth({
     sendOnSignIn: true,
     autoSignInAfterVerification: true,
   },
+  user: {
+    changeEmail: {
+      enabled: true,
+      async sendChangeEmailVerification({ user, newEmail, url }) {
+        await sendEmail({
+          to: user.email,
+          subject: "Approve email change",
+          text: `Your email has been changed to ${newEmail}. Click the link to approve the change: ${url}`,
+        });
+      },
+    },
+  },
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
