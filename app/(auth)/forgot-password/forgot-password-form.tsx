@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email" }),
@@ -23,6 +24,7 @@ const formSchema = z.object({
 
 export function ForgotPasswordForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,7 +38,7 @@ export function ForgotPasswordForm() {
       await authClient.requestPasswordReset(
         {
           email: values.email,
-          redirectTo: "/check-email?reset-password",
+          redirectTo: "/reset-password",
         },
         {
           onRequest: () => {
@@ -44,14 +46,16 @@ export function ForgotPasswordForm() {
           },
           onSuccess: () => {
             setLoading(false);
-            toast.success("Password reset email sent!");
-            form.reset();
+            toast.success(
+              "If your email is registered, a password reset email has been sent!"
+            );
+            router.push("/sign-in");
           },
           onError: (ctx) => {
             setLoading(false);
             toast.error(ctx.error?.message || "Failed to send reset email");
           },
-        },
+        }
       );
     } catch {
       setLoading(false);

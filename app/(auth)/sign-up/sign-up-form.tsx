@@ -54,14 +54,14 @@ export function SignUpForm() {
           },
           onSuccess: () => {
             setLoading(false);
-            toast.success("Account created successfully!");
-            router.push("/dashboard");
+            toast.success("Sign up successful! Please verify your email.");
+            router.push("/sign-in");
           },
           onError: (ctx) => {
             setLoading(false);
             toast.error(ctx.error.message || "Sign up failed");
           },
-        },
+        }
       );
     } catch {
       setLoading(false);
