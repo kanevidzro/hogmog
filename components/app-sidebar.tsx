@@ -1,5 +1,6 @@
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import { NavUser } from "@/components/nav-user";
+import { getServerSession } from "@/lib/session";
 
 import {
   Sidebar,
@@ -12,14 +13,6 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-};
 
 // Menu items.
 const items = [
@@ -50,7 +43,11 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  const session = await getServerSession();
+  if (!session?.user) {
+    return <div>Please sign in</div>;
+  }
   return (
     <Sidebar>
       <SidebarContent>
@@ -73,7 +70,13 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser
+          user={{
+            name: session.user.name ?? "User Name",
+            email: session.user.email ?? "m@example.com",
+            avatar: session.user.image ?? "/avatars/shadcn.jpg",
+          }}
+        />
       </SidebarFooter>
     </Sidebar>
   );
